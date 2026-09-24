@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Main Menu Screen -->
+    <div id="mainMenuScreen" class="menu-screen">
+        <div class="menu-container">
+            <h1 class="menu-title">GAMES</h1>
+            <div class="main-buttons">
+                <button class="menu-btn" onclick="goToGameMenu()">
+                    <div class="btn-icon">🎮</div>
+                    <div class="btn-text">Single Player</div>
+                </button>
+                <button class="menu-btn" onclick="goToPartyMenu()">
+                    <div class="btn-icon">👥</div>
+                    <div class="btn-text">Party</div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Selection Menu -->
+    <div id="gameMenuScreen" class="menu-screen hidden">
+        <div class="menu-container">
+            <h1 class="menu-title">SELECT GAME</h1>
+            <div class="games-grid">
+                <button class="game-card" onclick="startTetris()">
+                    <div class="game-icon">🟥</div>
+                    <div class="game-name">TETRIS</div>
+                </button>
+                <button class="game-card" onclick="startTicTacToe()">
+                    <div class="game-icon">⭕</div>
+                    <div class="game-name">TIC TAC TOE</div>
+                </button>
+            </div>
+            <button class="back-btn-menu" onclick="goToMainMenu()">← Back</button>
+        </div>
+    </div>
+
+    <!-- Party Menu -->
+    <div id="partyMenuScreen" class="menu-screen hidden">
+        <div class="menu-container">
+            <h1 class="menu-title">PARTY MODE</h1>
+            <div class="party-input-section">
+                <input type="text" id="playerName" class="party-input" placeholder="Enter your name">
+                <button class="party-btn" onclick="createParty()">CREATE PARTY</button>
+                <div class="separator-text">OR</div>
+                <input type="text" id="partyCode" class="party-input" placeholder="Enter party code">
+                <button class="party-btn" onclick="joinParty()">JOIN PARTY</button>
+            </div>
+            <button class="back-btn-menu" onclick="goToMainMenu()">← Back</button>
+        </div>
+    </div>
+
+    <!-- Party Lobby -->
+    <div id="partyLobbyScreen" class="menu-screen hidden">
+        <div class="lobby-container">
+            <h1 class="lobby-title">PARTY LOBBY</h1>
+            <div class="lobby-info">
+                <div class="info-box">
+                    <h3>Party Code</h3>
+                    <div class="party-code-display" id="partyCodeDisplay"></div>
+                    <button class="copy-btn" onclick="copyPartyCode()">Copy Code</button>
+                </div>
+                <div class="info-box">
+                    <h3>Players (<span id="playerCount">1</span>/2)</h3>
+                    <div id="playersList" class="players-list"></div>
+                </div>
+            </div>
+            <div class="lobby-buttons">
+                <button class="game-card" onclick="startPartyTetrisDuel()">
+                    <div class="game-icon">🟥</div>
+                    <div class="game-name">TETRIS DUEL</div>
+                </button>
+                <button class="game-card" onclick="startPartyTicTacToe()">
+                    <div class="game-icon">⭕</div>
+                    <div class="game-name">TIC TAC TOE VS</div>
+                </button>
+            </div>
+            <button class="back-btn-menu" onclick="leaveParty()">← Leave Party</button>
+        </div>
+    </div>
+
+    <!-- Tetris Game Screen -->
+    <div id="tetrisScreen" class="game-screen hidden">
+        <div class="container">
+            <h1>TETRIS</h1>
+            
+            <div class="game-wrapper">
+            <div class="main-game">
+                <button id="pauseBtn" class="pause-btn-top" disabled>⏸ Pause</button>
+                <canvas id="gameCanvas" width="300" height="600"></canvas>
+            </div>
+            
+            <div class="sidebar">
+                <div class="info-box">
+                    <h3>Score</h3>
+                    <div id="score" class="score-value">0</div>
+                </div>
+                
+                <div class="info-box">
+                    <h3>Level</h3>
+                    <div id="level" class="score-value">1</div>
+                </div>
+                
+                <div class="info-box">
+                    <h3>Lines</h3>
+                    <div id="lines" class="score-value">0</div>
+                </div>
+                
+                <div class="controls">
+                    <h3>Controls</h3>
+                    <p>← → Arrow Keys to Move</p>
+                    <p>↑ Arrow Key to Rotate</p>
+                    <p>↓ Arrow Key to Drop</p>
+                    <p>SPACE to Pause</p>
+                </div>
+                
+                <button id="startBtn" class="btn">Start Game</button>
+            </div>
+        </div>
+        
+        <div id="gameOverScreen" class="game-over-screen hidden">
+            <div class="game-over-content">
+                <h2>GAME OVER</h2>
+                <p>Final Score: <span id="finalScore">0</span></p>
+                <button onclick="goToMenu()" class="btn-large">Back to Menu</button>
+            </div>
+        </div>
+        <button id="backToMenuBtn" class="back-btn" onclick="goToMenu()">← Back to Menu</button>
+        </div>
+    </div>
+
+    <!-- Tic Tac Toe Game Screen -->
+    <div id="ticTacToeScreen" class="game-screen hidden">
+        <div class="container">
+            <h1>TIC TAC TOE</h1>
+            
+            <div class="tictactoe-wrapper">
+                <div class="game-info">
+                    <div class="info-box">
+                        <h3>Your Mark</h3>
+                        <div class="mark-display" id="playerMark">X</div>
+                    </div>
+                    <div class="info-box">
+                        <h3>Status</h3>
+                        <div class="status-display" id="gameStatus">Your Turn</div>
+                    </div>
+                </div>
+
+                <div class="board" id="gameBoard">
+                    <button class="cell" data-index="0"></button>
+                    <button class="cell" data-index="1"></button>
+                    <button class="cell" data-index="2"></button>
+                    <button class="cell" data-index="3"></button>
+                    <button class="cell" data-index="4"></button>
+                    <button class="cell" data-index="5"></button>
+                    <button class="cell" data-index="6"></button>
+                    <button class="cell" data-index="7"></button>
+                    <button class="cell" data-index="8"></button>
+                </div>
+
+                <button id="resetGameBtn" class="btn" style="width: 300px; margin-top: 20px;">New Game</button>
+            </div>
+        </div>
+        <button id="backToMenuBtn2" class="back-btn" onclick="goToMenu()">← Back to Menu</button>
+    </div>
+
+    <!-- Tetris Duel Screen -->
+    <div id="tetrisDuelScreen" class="game-screen hidden">
+        <div class="duel-container">
+            <h1>TETRIS DUEL</h1>
+            <div class="duel-board">
+                <div class="duel-player">
+                    <h3 id="player1NameDuel">Player 1</h3>
+                    <canvas id="gameCanvasDuel1" width="250" height="500" class="duel-canvas"></canvas>
+                    <div class="duel-score">
+                        <div class="score-item">Score: <span id="duelScore1">0</span></div>
+                        <div class="score-item">Lines: <span id="duelLines1">0</span></div>
+                    </div>
+                </div>
+                <div class="vs-divider">VS</div>
+                <div class="duel-player">
+                    <h3 id="player2NameDuel">Player 2</h3>
+                    <canvas id="gameCanvasDuel2" width="250" height="500" class="duel-canvas"></canvas>
+                    <div class="duel-score">
+                        <div class="score-item">Score: <span id="duelScore2">0</span></div>
+                        <div class="score-item">Lines: <span id="duelLines2">0</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="duel-controls">
+                <button id="startDuelBtn" class="btn">Start Duel</button>
+                <button id="duelPauseBtn" class="btn" disabled>Pause</button>
+            </div>
+        </div>
+        <button id="backFromDuelBtn" class="back-btn" onclick="goToPartyLobby()">← Back to Lobby</button>
+    </div>
+
+    <!-- Party Tic Tac Toe Screen -->
+    <div id="partyTicTacToeScreen" class="game-screen hidden">
+        <div class="container">
+            <h1>TIC TAC TOE VS</h1>
+            
+            <div class="tictactoe-wrapper">
+                <div class="game-info">
+                    <div class="info-box">
+                        <h3>Player 1: <span id="p1NameTTT">Player 1</span></h3>
+                        <div class="mark-display" id="playerMarkTTT">X</div>
+                    </div>
+                    <div class="info-box">
+                        <h3>Status</h3>
+                        <div class="status-display" id="gameStatusTTT">Player 1's Turn</div>
+                    </div>
+                    <div class="info-box">
+                        <h3>Player 2: <span id="p2NameTTT">Player 2</span></h3>
+                        <div class="mark-display" id="mark2Display" style="color: #ff00ff;">O</div>
+                    </div>
+                </div>
+
+                <div class="board" id="gameBoardTTT">
+                    <button class="cell" data-index="0"></button>
+                    <button class="cell" data-index="1"></button>
+                    <button class="cell" data-index="2"></button>
+                    <button class="cell" data-index="3"></button>
+                    <button class="cell" data-index="4"></button>
+                    <button class="cell" data-index="5"></button>
+                    <button class="cell" data-index="6"></button>
+                    <button class="cell" data-index="7"></button>
+                    <button class="cell" data-index="8"></button>
+                </div>
+
+                <button id="resetPartyTTTBtn" class="btn" style="width: 300px; margin-top: 20px;">New Game</button>
+            </div>
+        </div>
+        <button id="backFromTTTBtn" class="back-btn" onclick="goToPartyLobby()">← Back to Lobby</button>
+    </div>
+
+    <script src="game-new.js"></script>
+</body>
+</html>
